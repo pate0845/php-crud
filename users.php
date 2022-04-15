@@ -1,7 +1,7 @@
 <?php
 include_once("connection.php");
 $selectAll="SELECT * FROM users ORDER BY id DESC";
-$record = mysqli_query($connection,$selectAll);
+$record = $connection->query($selectAll);
 
 $table='<table class="table table-hover" style="width: 80%;">
         <thead>

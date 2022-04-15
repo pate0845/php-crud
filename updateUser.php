@@ -7,7 +7,7 @@ if(isset($_POST["id"])){
     $userId=$connection->real_escape_string($_POST['id']);
     if($userEmail!=''&& $username!=''){
     $edit="UPDATE `users` SET `firstname`='$username',`email`='$userEmail' WHERE id=$userId";
-    $result=mysqli_query($connection,$edit);
+    $result=$connection->query($edit);
     if($result){
         echo 'success';
     }else{

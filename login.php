@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <title>User Login</title>
 </head>
 
 <body>
+    <div id="message"></div>
     <div class="container">
         <div class="wrapper">
             <div class="title"><span>Sign up</span></div>
@@ -49,8 +52,6 @@
                 </div>
               
                 <div class="signup_link">Not a member? <a href="#">Signup</a></a></div>
-                <div id="error">
-                </div>
             </div>
         </div>
     </form>
@@ -66,20 +67,31 @@
                     alert("Please check your input");
                 } else {
                     $.ajax({
-                        url: 'http://localhost/securicore-assesment/db_connect.php',
+                        url: 'validateLogin.php',
                         method: 'POST',
                         data: {
                             login: 1,
                             email: email,
                             password: password
                         },
-                        success: function() {
-                            console.log('success');
+                        success: function(data) {
+                            if(data.indexOf('success')>=0){
+                                window.location='index.php';
+                            }
+                            $('#message').html(display_message(data));
+                            $('#email').val('');
+                            $('#password').val('');
                         },
                         dataType: 'text'
                     });
                 }
             });
+
+            function display_message(text){
+                return ` <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${text}         
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+            }
 
         })
     </script>

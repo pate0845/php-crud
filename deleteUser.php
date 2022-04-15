@@ -4,7 +4,8 @@ include_once("connection.php");
 if(isset($_POST['del'])){
     $id=$_POST['del'];
     if($id!=''){
-    $result=mysqli_query($connection,"DELETE FROM users WHERE id=$id");
+    $query="DELETE FROM users WHERE id=$id";    
+    $result=$connection->query($query);
     if($result){
         echo 'success';
     }else{

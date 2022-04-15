@@ -2,9 +2,10 @@
 include("connection.php");
 //get data by :id
 if(isset($_POST["n_id"])){
+   // $edit_state=true;
     $userId=$_POST['n_id'];
     $query="SELECT * FROM users WHERE id=$userId";
-    $result=mysqli_query($connection,$query);
+    $result=$connection->query($query);
     $row=mysqli_fetch_array($result);
     $name=$row['firstname'];
     $email=$row['email'];

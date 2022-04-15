@@ -1,3 +1,11 @@
+<?php 
+session_start();
+//var_dump($_SESSION);
+	if (!isset($_SESSION["email"]) || !isset($_SESSION["loggedIN"])) {
+			header("Location: login.php");
+			exit();
+	}  
+?>      
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +16,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./css/index.css">
     <title>Users</title>
 </head>
 <body>  
+    <?php //global $edit_state; ?>
     <div id="message">
     </div>
     <div id="users-list">
@@ -19,128 +28,30 @@
     <form method="POST">
         <!-- Edit user data -->
         <input type="hidden" name="id" id="id">
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="logout.php">Log out</a>
+            </li>
+        </ul>  
         <div class="input-data">
-            <label>Name</label>
-            <span></span>
             <input type="text" name="name" id="name" >
-        </div>
-        <div class="input-data">
-            <label>Email</label>
             <span></span>
-            <input type="text" name="email" id="email" >
+            <label>Name</label>
         </div>
         <div class="input-data">
+            <input type="text" name="email" id="email" >
+            <span></span>            
+            <label>Email</label>
+        </div>
+        <div class="input-btn">
+            <?php //if($edit_state==false):?>
             <button type="button" name="save" id="save" class="btn">Save</button>
+            <?php //else:?>
             <button type="button" name="update" id="update" class="btn">Update</button>
+            <?php //endif;?>
         </div>
         </div>
     </form>
-    <script>
-        $(document).ready(function() {
-            FetchUsers();
-        });
-
-        function display_message(text){
-                return ` <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${text}         
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-            }
-
-            $("#save").on('click', function() {
-                var email = $('#email').val();
-                var name = $('#name').val();
-                if (email == "" || name == "") {
-                    alert("Please check your input");
-                    return false;
-                } 
-                $.ajax({
-                        type:'post',
-                        url:'addUser.php',
-                        data: {email: email,name: name},
-                        success: function(data) {   
-                            if(data=='true'){
-                                $('#email').val('');
-                                $('#name').val('');
-                                FetchUsers();
-                                $('#message').html(display_message('User added!'));
-                            }else{
-                                $('#message').add(display_message('User not added!'));
-                            }
-                        }
-                    });
-            });
-
-            
-        function editUser(id){
-                $.ajax({
-                    type:'post',
-                    url:'editUsers.php',
-                    data:{n_id:id},
-                    dataTypes:'json',
-                    success:function(data){
-                        data=JSON.parse(data);
-                        if(data!=''){
-                            $('#email').val(data.email);
-                            $('#name').val(data.name);
-                            $('#id').val(data.id);
-                        }
-                    }
-                })
-            }
-
-            $("#update").on('click', function() {
-                var email = $('#email').val();
-                var name = $('#name').val();
-                var id=$('#id').val();
-                if (email == "" || name == "") {
-                    alert("Please check your input");
-                    return false;
-                } 
-                $.ajax({
-                        type:'post',
-                        url:'updateUser.php',
-                        data: {email: email,name: name,id:id},
-                        success: function(data) {
-                            console.log(data);
-                            if(data=='success'){
-                                FetchUsers();
-                                $('#email').val('');
-                                $('#name').val('');
-                                $('#id').val('');
-                                $('#message').html(display_message('User updated!'));
-                            }else{
-                                $('#message').add(display_message('User not updated!'));
-                            }
-                        }
-                    });
-            });
-
-        function FetchUsers(){
-                $.ajax({
-                    type:'post',
-                    url:'users.php',
-                    data:{},
-                    success:function(data){
-                        if(data!=''){
-                            $('#users-list').html(data);
-                        }
-                    }
-                })
-            }
-
-        function deleteUser(id){
-            $.ajax({
-                    type:'post',
-                    url:'deleteUser.php',
-                    data:{del:id},
-                    success:function(data){
-                        if(data!=''){
-                            FetchUsers();
-                            $('#message').html(display_message('User Deleted!'));
-                        }
-                    }
-                })
-        }    
-    </script>
+    <script src="./js/script.js"></script>
 </body>
 </html>
