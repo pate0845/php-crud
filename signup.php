@@ -1,3 +1,26 @@
+<?php
+    session_start();
+    include("connection.php");
+    if(isset($_POST['name'])){
+        $name=$connection->real_escape_string($_POST['name']);
+        $email=$connection->real_escape_string($_POST['email']);
+        $userCheck="SELECT * FROM users WHERE email='$email' OR firstname='$name'";
+        $data=$connection->query($userCheck);
+        if($data->num_rows>0){
+            exit("user present");
+        }else{
+            $password=md5($connection->real_escape_string($_POST['password']));
+            $query="INSERT INTO `users` (`firstname`,`email`,`password`) VALUES ('$name', '$email','$password')";
+            $newUser=$connection->query($query);
+            if($newUser){
+                exit('added');
+            }else{
+                exit('failed');
+            }
+         }
+        }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,32 +32,23 @@
     <link rel="stylesheet" href="./css/style.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    <title>User Login</title>
+    <title>User Signup</title>
 </head>
 
 <body>
     <div id="message"></div>
     <div class="container">
         <div class="wrapper">
-            <div class="title"><span>Log In</span></div>
+            <div class="title"><span>Sign Up</span></div>
             <form>
-                <div class="media">
-                    <a href="https://www.facebook.com/login.php">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </a>
-                    <a href="https://twitter.com/i/flow/login">
-                        <i class="fa-brands fa-twitter"></i>
-                    </a> 
-                    <a href="https://accounts.google.com/signin/v2/identifier?flowName=GlifWebSignIn&flowEntry=ServiceLogin">         
-                        <i class="fa-brands fa-google"></i>
-                    </a>
-                    <a href="https://github.com/login">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
-                </div>
-                <span class="seprate-row">or</span>
                 <div class="row">
                     <i class="fas fa-user"></i>
+                    <input type="text" id="name" name="name" required placeholder="Name">
+                    <span></span>
+                </div>
+
+                <div class="row">
+                    <i class="fa-solid fa-envelope"></i>
                     <input type="text" id="email" name="email" required placeholder="Email">
                     <span></span>
                 </div>
@@ -46,37 +60,46 @@
                 </div>
                               
                 <div class="row button">
-                    <input type="button" id="login" value="Log In" class="btn">
+                    <input type="button" id="signup" value="SignUp" class="btn">
                 </div>
               
-                <div class="signup_link">Not a member? <a href="signup.php">Signup</a></a></div>
             </div>
         </div>
     </form>
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
+
         $(document).ready(function() {
-            $("#login").on('click', function() {
+            $("#signup").on('click', function() {
+                var name=$('#name').val();
                 var email = $('#email').val();
                 var password = $('#password').val();
 
-                if (email == "" || password == "") {
+                if (email == "" || password == "" || name=="") {
                     alert("Please check your input");
                 } else {
                     $.ajax({
-                        url: 'validateLogin.php',
+                        url: 'signup.php',
                         method: 'POST',
                         data: {
-                            login: 1,
+                            name:name,
                             email: email,
                             password: password
                         },
                         success: function(data) {
-                            if(data.indexOf('success')>=0){
-                                window.location='index.php';
+                            if(data.indexOf('added')>=0){
+                                $('#message').html(display_message("Successfully Registered!"));
+                                setTimeout(window.location="login.php",5500);
+                            }else if(data.indexOf('user present')>=0){
+                                $('#message').html(display_message("User or Email already present!"));
+                                setTimeout(window.location="login.php",5500);
+                            }else{
+                                $('#message').html(display_message("failed to register!"));
+                                setTimeout(window.location="login.php",5500);
+
                             }
-                            $('#message').html(display_message(data));
+                            $('#name').val('');
                             $('#email').val('');
                             $('#password').val('');
                         },
@@ -86,11 +109,11 @@
             });
 
             function display_message(text){
-                return ` <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                ${text}         
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-            }
-
+                return (` 
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                ${text}     
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+            };
         })
     </script>
 
