@@ -62,7 +62,7 @@
                 <div class="row button">
                     <input type="button" id="signup" value="SignUp" class="btn">
                 </div>
-              
+                <div class="signup_link">Already Registered! <a href="login.php">Log In</a></a></div>
             </div>
         </div>
     </form>
@@ -90,14 +90,11 @@
                         success: function(data) {
                             if(data.indexOf('added')>=0){
                                 $('#message').html(display_message("Successfully Registered!"));
-                                setTimeout(window.location="login.php",5500);
+                                window.location="login.php";
                             }else if(data.indexOf('user present')>=0){
                                 $('#message').html(display_message("User or Email already present!"));
-                                setTimeout(window.location="login.php",5500);
                             }else{
                                 $('#message').html(display_message("failed to register!"));
-                                setTimeout(window.location="login.php",5500);
-
                             }
                             $('#name').val('');
                             $('#email').val('');
