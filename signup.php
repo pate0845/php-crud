@@ -77,8 +77,11 @@
                 var password = $('#password').val();
 
                 if (email == "" || password == "" || name=="") {
-                    alert("Please check your input");
-                } else {
+                    $('#message').html(display_message("Enter all the values!"));
+                }else if(validateEmail(email)==false){
+                    $('#message').html(display_message("Enter valid email!"));
+                } 
+                else {
                     $.ajax({
                         url: 'signup.php',
                         method: 'POST',
@@ -111,6 +114,16 @@
                 ${text}     
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
             };
+
+            //validate email
+function validateEmail(email){
+  var reg = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i;
+  if(reg.test(email)){
+      return true;
+  }else{
+      return false;
+  }
+}
         })
     </script>
 
