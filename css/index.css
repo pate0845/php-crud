@@ -8,7 +8,8 @@
 
 body{
   display: grid;
-  background-color: rgb(249, 242, 212);
+  background-color: #63a4ff;
+  background-image: linear-gradient(315deg, #63a4ff 74%, #83eaf1 74%);
 }
 
 
@@ -29,21 +30,21 @@ body{
   }
 
 form{
-  background-color: aliceblue;
-  width:60%;
-  border: 1px solid;
+  background-color: #f6fba2;
+  background-image: linear-gradient(315deg, #f6fba2 0%, #20ded3 74%);  border: 1px solid;
   margin:50px auto;
   text-align: left;
   padding: 30px;
   box-sizing: border-box;
   border-radius: 5px;
   border-color: aqua;
+  width: 60%;
 }
 
 
 form .input-data{
   position: relative;
-  border-bottom: 2px solid #adadad;
+  border-bottom: 3px solid #adadad;
   margin:30px 0;
 }
 
@@ -55,6 +56,7 @@ form .input-data{
   border: none;
   background: none;
   outline: none;
+  margin-top: 2px;
 }
 
 .input-data label{
@@ -67,6 +69,7 @@ form .input-data{
   pointer-events: none;
   transition: .5s;
   font-weight: 700;
+  margin-bottom: 5px;
 }
 
 .input-data span::before{
